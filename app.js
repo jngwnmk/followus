@@ -3,7 +3,7 @@ var express = require('express')
   , app = express();
 
 app.get(['/', '/index.html'], function (req, res){
-    res.send('Hello Elastic Beanstalk - Git');
+    res.send('Hello Elastic Beanstalk - Git new task');
 });
 
 http.createServer(app).listen(process.env.PORT || 3000);
