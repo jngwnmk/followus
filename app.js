@@ -1,9 +1,14 @@
-var express = require('express')
-  , http = require('http')
-  , app = express();
+var express = require('express');
+var wagner = require('wagner-core');
 
-app.get(['/', '/index.html'], function (req, res){
-    res.send('Hello Elastic Beanstalk - Git new task');
-});
+require('./model/models')(wagner);
 
-http.createServer(app).listen(process.env.PORT || 3000);
+var app = express();
+/*app.use(wagner.invoke(function(User) {
+  return function(req, res, next) {
+    User.findOne({}, function(error, user) { req.user = user; next(); });
+  };
+}));*/
+app.use('/api/v1', require('./routes/api')(wagner));
+app.listen(process.env.PORT);
+console.log('Listening on port '+process.env.PORT);
