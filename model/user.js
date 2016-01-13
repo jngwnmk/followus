@@ -2,19 +2,14 @@ var mongoose = require('mongoose');
 
 var userSchema = {
 
-	_id : { 
-		type : String,
-		required : true
-	},
-	username: {
-    	type: String,
-      	required: true,
-      	lowercase: true
+	  username: {
+    	  type: String,
+      	required: true
     },
     cellphone :{
     	type : String,
     	required : true,
-    	match : /^/ //TODO : Update to regular expression of cellphone
+    	match : /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/ 
     },
     pwd : {
     	type : String,
@@ -22,6 +17,10 @@ var userSchema = {
     },
 
     position : {
+      type : String  
+    },
+    
+    surveytype : {
       type: String,
       enum: ['NEW', 'EXPERT', 'MANAGER'],
       required: true
@@ -37,11 +36,10 @@ var userSchema = {
 
     photo: {
       type: String,
-      required: true,
       match: /^http:\/\//i
     },
 
-    padi :{
+    paid :{
     	type : Boolean,
     	required : true,
     	default : false

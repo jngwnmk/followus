@@ -2,11 +2,6 @@ var mongoose = require('mongoose');
 
 var surveyTemplateSchema = {
 
-	_id : { 
-		type : String,
-		required : true
-	},
-
 	type : {
       type: String,
       enum: ['NEW', 'EXPERT', 'MANAGER'],

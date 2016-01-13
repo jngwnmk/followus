@@ -4,11 +4,6 @@ var SurveyTemplate = require('./surveytemplate');
 
 var surveyResultSchema = {
 
-	_id : { 
-		type : String,
-		required : true
-	},
-
 	user : User.userSchema,
 	surveytemplate : SurveyTemplate.surveyTemplateSchema,
 	date : {
