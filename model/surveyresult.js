@@ -9,9 +9,9 @@ var surveyResultSchema = {
 	date : {
 		type : Date,
 		required : true
-	}
+	} 
 	 
 };
 
-module.exports = new mongoose.Schema(surveyResultSchema);
+module.exports = new mongoose.Schema(surveyResultSchema, {versionKey:false});
 module.exports.surveyResultSchema = surveyResultSchema;

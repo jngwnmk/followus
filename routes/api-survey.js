@@ -3,43 +3,11 @@ var express = require('express');
 var status = require('http-status');
 var ObjectId = require('mongoose').Types.ObjectId;
 
+
 module.exports = function(wagner) {
     var api = express.Router();
 
     api.use(bodyparser.json());
-    
-    api.get('/login', wagner.invoke(function(User) {
-        return function(req, res){
-             res.send("{login}"); 
-        };
-    }));
-    
-    //TODO
-    api.post('/register', wagner.invoke(function(User) {
-        return function(req,res){
-            User.create(req.body, function(error){
-                res.send("OK");
-            });
-        };
-    }));
-    
-    api.put('/pwdChange', wagner.invoke(function(User) {
-        return function(req,res){
-             res.send("{pwdChange}");
-        };
-    }));
-    
-    api.get('/user', wagner.invoke(function(User) {
-        return function(req, res) {
-            User.find({}).exec(handleMany.bind(null,'users',res));
-        };
-    }));
-    
-    api.get('/user/:id', wagner.invoke(function(User) {
-        return function(req, res){
-            User.findOne({'_id': new ObjectId(req.params.id)},handleOne.bind(null,'user',res));
-        }; 
-    }));
     
     api.get('/surveyResult', wagner.invoke(function(SurveyResult) {
         return function(req,res){
@@ -49,7 +17,7 @@ module.exports = function(wagner) {
     
     api.get('/surveyTemplate',wagner.invoke(function(SurveyTemplate) {
         return function(req,res){
-            res.send("{surveyTemplate}");
+           SurveyTemplate.find({}).exec(handleMany.bind(null,'surveytemplates',res));
         };
     }));
 

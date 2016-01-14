@@ -23,30 +23,29 @@ var surveyTemplateSchema = {
   			required : true
   		},
 
-  		answer : 
-  		[
-  			{
-  				no : {
-  					type : Number,
-  					required : true
-  				},
-  				desc : {
-  					type : String,
-  					required : true
-  				},
-  				mindesc :{
-  					type : String
-  				},
-  				maxdesc : {
-  					type : String
-  				}
-
-
-  			}
-  		]
+  		answer : {
+    		options: [
+    			{
+    				no : {
+    					type : Number,
+    					required : true
+    				},
+    				desc : {
+    					type : String,
+    					required : true
+    				}
+    			}
+    		],
+    		mindesc :{
+    					type : String
+    		},
+    		maxdesc : {
+    					type : String
+    		}
+  		}
     }]
 	 
 };
 
-module.exports = new mongoose.Schema(surveyTemplateSchema);
+module.exports = new mongoose.Schema(surveyTemplateSchema, {versionKey : false});
 module.exports.surveyTemplateSchema = surveyTemplateSchema;

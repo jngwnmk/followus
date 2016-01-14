@@ -1,15 +1,23 @@
 var mongoose = require('mongoose');
+var uniqueValidator = require('mongoose-unique-validator');
 
 var userSchema = {
 
 	  username: {
     	  type: String,
       	required: true
+      	
+    },
+    usertype :{
+        type : String,
+        required : true,
+        enum : ['ADMIN','USER']
     },
     cellphone :{
     	type : String,
     	required : true,
-    	match : /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/ 
+    	match : /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/,
+    	unique : true
     },
     pwd : {
     	type : String,
@@ -46,5 +54,6 @@ var userSchema = {
     }
 };
 
-module.exports = new mongoose.Schema(userSchema);
+module.exports = new mongoose.Schema(userSchema, {versionKey: false});
+module.exports.plugin(uniqueValidator);
 module.exports.userSchema = userSchema;

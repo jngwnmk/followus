@@ -1,0 +1,34 @@
+[
+      {
+        "username": "신민아",
+        "usertype" :"USER",
+        "cellphone" : "010-2232-3322",
+        "pwd" : "3322",
+        "position" : "대리",
+        "surveytype" : "NEW",
+        "organization" : "교보생명",
+        "photo" : "http://",
+        "paid" : false
+      },
+      {
+        "username": "김구라",
+        "usertype": "USER",
+        "cellphone" : "010-1234-2335",
+        "pwd" : "2335",
+        "position" : "과장",
+        "surveytype" : "EXPERT",
+        "organization" : "신한생명",
+        "photo" : "http://",
+        "paid" : true
+      },
+      {
+        "username": "홍길동",
+        "usertype": "ADMIN",
+        "cellphone" : "010-0987-1234",
+        "pwd" : "1234",
+        "position" : "신입",
+        "surveytype" : "NEW",
+        "organization" : "신한생명",
+        "photo" : "http://"
+      }
+]

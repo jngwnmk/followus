@@ -9,6 +9,8 @@ var app = express();
     User.findOne({}, function(error, user) { req.user = user; next(); });
   };
 }));*/
-app.use('/api/v1', require('./routes/api')(wagner));
+app.use('/api/v1', require('./routes/api-user')(wagner));
+app.use('/api/v1', require('./routes/api-survey')(wagner));
+
 app.listen(process.env.PORT);
 console.log('Listening on port '+process.env.PORT);
