@@ -1,7 +1,7 @@
 {
   "name": "hello",
   "description": "Hello Elastic Beanstalk",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "dependencies": {
     "express": "4.12.3",
     "body-parser" : "1.12.4",
