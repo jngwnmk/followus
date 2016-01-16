@@ -72,7 +72,6 @@ describe('API TEST', function() {
     superagent.get(url, function(error, res) {
         assert.ifError(error);
         var result;
-        // And make sure we got the LG G4 back
         assert.doesNotThrow(function() {
           result = JSON.parse(res.text);
         });
@@ -88,7 +87,6 @@ describe('API TEST', function() {
             // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/user/userid
             superagent.get(url, function(error, res) {
                 var result;
-                // And make sure we got the LG G4 back
                 assert.doesNotThrow(function() {
                   result = JSON.parse(res.text);
                 });
@@ -129,6 +127,28 @@ describe('API TEST', function() {
       });
   });
   
+  it('[USER API] can chagen introduction message', function(done) {
+      var url = URL_ROOT + '/introMsgChange';
+    // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/introMsgChange
+    superagent.
+      put(url).
+      send({
+        data : {
+            cellphone : '010-0987-1234',
+            introduction : 'newpwd'
+            
+        }
+      }).
+      end(function(error, res) {
+        assert.ifError(error);
+        assert.doesNotThrow(function() {
+          result = JSON.parse(res.text);
+        });
+        assert.equal(result.user.introduction,'newpwd');
+        done();
+      });
+  });
+  
   it('[USER API] can register user', function(done) {
      var url = URL_ROOT + '/register';
      // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/register
@@ -153,7 +173,6 @@ describe('API TEST', function() {
       end(function(error, res) {
         assert.ifError(error);
         var result;
-        // And make sure we got the LG G4 back
         assert.doesNotThrow(function() {
           result = JSON.parse(res.text);
         });
@@ -169,13 +188,14 @@ describe('API TEST', function() {
       });
   });
   
+  
+  
   it('[SURVEY API] can load all survey tempalte with paging', function(done){
     var url = URL_ROOT + '/surveyTemplate';
     // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/surveyTempate
     superagent.get(url, function(error, res) {
         assert.ifError(error);
         var result;
-        // And make sure we got the LG G4 back
         assert.doesNotThrow(function() {
           result = JSON.parse(res.text);
         });
@@ -183,5 +203,135 @@ describe('API TEST', function() {
         done();
      });
   });
+  
+  it('[SURVEY API] can load survey with user id', function(done) {
+    User.findOne({username:'신민아'}, function(error, user){
+            assert.ifError(error);
+            var url = URL_ROOT + '/survey/'+user._id;
+            // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/survey/userid
+            superagent.get(url, function(error, res) {
+                var result;
+                assert.doesNotThrow(function() {
+                  result = JSON.parse(res.text);
+                });
+                assert.equal(result.survey.type, 'NEW');
+                done();
+            });    
+    }); 
+  });
+  
+  it('[SURVEY API] can send survey result', function(done) {
+     User.findOne({username:'신민아'}, function(error, user){
+            assert.ifError(error);
+            
+            SurveyTemplate.findOne({type :user.surveytype}, function(error,surveytemplate){
+              var url = URL_ROOT + '/survey';
+              // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/survey
+              //console.log(surveytemplate);
+              var survey = {
+                    survey: {
+                      user : user._id,
+                      surveytype : user.surveytype,
+                      answers : [
+                        {
+                            no : 1,
+                            desc : "정원묵"
+                        },
+                        {
+                            no : 2,
+                            desc : surveytemplate.questions[1].answer.options[0].no + "." +
+                                   surveytemplate.questions[1].answer.options[0].desc
+                        },
+                        {
+                            no : 3,
+                            desc: surveytemplate.questions[2].answer.options[2].no + "." +
+                                  surveytemplate.questions[2].answer.options[2].desc
+                        },
+                        {
+                            no : 4,
+                            desc : surveytemplate.questions[3].answer.options[0].no + "." +
+                                  surveytemplate.questions[3].answer.options[0].desc
+                        },
+                        {
+                            no : 5,
+                            desc : surveytemplate.questions[4].answer.options[2].no + "." + 
+                                  surveytemplate.questions[4].answer.options[2].desc
+                        },
+                        {
+                            no : 6,
+                            desc : surveytemplate.questions[5].answer.options[1].no + "." +
+                                  surveytemplate.questions[5].answer.options[1].desc
+                        },
+                        {
+                            no : 7,
+                            desc : surveytemplate.questions[6].answer.options[0].no + "." +
+                                  surveytemplate.questions[6].answer.options[0].desc
+                        },
+                        {
+                            no : 8,
+                            desc : surveytemplate.questions[7].answer.options[1].no+ "." +
+                                  surveytemplate.questions[7].answer.options[1].desc
+                        },
+                        {
+                            no : 9,
+                            desc : surveytemplate.questions[8].answer.options[0].no+ "." +
+                                  surveytemplate.questions[8].answer.options[0].desc
+                        },
+                        {
+                            no : 10,
+                            desc : surveytemplate.questions[9].answer.options[1].no + "." +
+                                  surveytemplate.questions[9].answer.options[1].desc
+                            
+                        },
+                        {
+                            no : 11,
+                            desc : surveytemplate.questions[10].answer.options[0].no + "." +
+                                  surveytemplate.questions[10].answer.options[0].desc
+                        },
+                        {
+                            no : 12,
+                            desc : surveytemplate.questions[11].answer.options[0].no+ "." +
+                                  surveytemplate.questions[11].answer.options[0].desc
+                        },
+                        {
+                            no : 13,
+                            desc : surveytemplate.questions[12].answer.options[0].no+ "." +
+                                  surveytemplate.questions[12].answer.options[0].desc
+                        },
+                        {
+                            no : 14,
+                            desc : surveytemplate.questions[13].answer.options[0].no
+                        },
+                        {
+                            no : 15,
+                            desc : "정팔이 덕선이"
+                        }
+                        
+                      ],
+                      date : new Date()
+                    }      
+              };
+              
+              superagent.
+              post(url).
+              send(survey).
+              end(function(error, res) {
+                assert.ifError(error);
+                var result;
+                assert.doesNotThrow(function() {
+                  result = JSON.parse(res.text);
+                });
+                assert.equal(result.msg,'OK');
+                done();
+                
+              });
+              
+            });
+            
+    }); 
+    
+  });
+  
+  
 
 });

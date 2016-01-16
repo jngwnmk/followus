@@ -61,6 +61,33 @@ module.exports = function(wagner) {
         };
     }));
     
+    api.put('/introMsgChange', wagner.invoke(function(User) {
+        return function(req,res){
+            User.findOne({cellphone : req.body.data.cellphone},
+                function(error, user){
+                    if(error){
+                        return res.status(status.INTERNAL_SERVER_ERROR).
+                        json({error : error.toString()});
+                    }
+                    
+                    if(!user){
+                        return res.status(status.NOT_FOUND).
+                        json({error : 'Not fount'});
+                    }
+                    
+                    user.introduction = req.body.data.introduction;
+                    user.save(function(err, doc){
+                        if(err){
+                            return res.status(status.INTERNAL_SERVER_ERROR).
+                            json({error : err});
+                        }
+                        res.json({user : user});
+                    });
+                }    
+            );  
+        };
+    }));
+    
     api.get('/user', wagner.invoke(function(User) {
         return function(req, res) {
             User.find({}).exec(handleMany.bind(null,'users',res));
