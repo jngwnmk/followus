@@ -2,12 +2,16 @@ var mongoose = require('mongoose');
 
 var surveyTemplateSchema = {
 
-	type : {
+	 type : {
       type: String,
       enum: ['NEW', 'EXPERT', 'MANAGER'],
       required: true
     },
-
+    desc  : {
+      type : String,
+      required : true
+    },
+    
     questions : [{
   		no : {
   			type : Number,

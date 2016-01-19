@@ -43,6 +43,12 @@ module.exports = function(wagner) {
            SurveyTemplate.find({}).exec(handleMany.bind(null,'surveytemplates',res));
         };
     }));
+    
+    api.get('/surveyTemplate/:type',wagner.invoke(function(SurveyTemplate) {
+        return function(req,res){
+          SurveyTemplate.findOne({'type' : req.params.type},handleOne.bind(null,'surveytemplate',res))  
+        }; 
+    }))
 
     api.get('/survey/:id/',wagner.invoke(function(User,SurveyTemplate) {
             return function(req, res){

@@ -199,7 +199,7 @@ describe('API TEST', function() {
         assert.doesNotThrow(function() {
           result = JSON.parse(res.text);
         });
-        assert.equal(result.surveytemplates.length, 1);
+        assert.equal(result.surveytemplates.length, 3);
         done();
      });
   });
