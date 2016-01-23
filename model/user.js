@@ -1,4 +1,6 @@
 var mongoose = require('mongoose');
+var bcrypt = require('bcrypt-nodejs');
+
 var userSchema = {
 
 	  username: {
@@ -49,8 +51,41 @@ var userSchema = {
     	type : Boolean,
     	required : true,
     	default : false
-    }
+    },
+    date : {
+		type : Date,
+		required : true,
+		default :  new Date()
+	} 
 };
 
-module.exports = new mongoose.Schema(userSchema, {versionKey: false});
+
+
+
+var userMongooseScheme = new mongoose.Schema(userSchema, {versionKey: false});
+userMongooseScheme.methods.generateHash = function(password){
+  return bcrypt.hashSync(password, bcrypt.genSaltSync(8),null);
+};
+userMongooseScheme.methods.validPassword = function(password){
+  return bcrypt.compareSync(password, this.pwd);
+};
+
+userMongooseScheme.methods.verifyPassword = function(password, cb) {
+  bcrypt.compare(password, this.pwd, function(err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
+};
+
+userMongooseScheme.methods.isAdmin = function(){
+  if(this.usertype=='ADMIN'){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+module.exports  = userMongooseScheme;
 module.exports.userSchema = userSchema;
+// create the model for users and expose it to our app
+module.exports = mongoose.model('User', userMongooseScheme);

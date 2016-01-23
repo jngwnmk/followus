@@ -2,21 +2,24 @@ var bodyparser = require('body-parser');
 var express = require('express');
 var status = require('http-status');
 var ObjectId = require('mongoose').Types.ObjectId;
+var bcrypt = require('bcrypt-nodejs');
 
-
-module.exports = function(wagner) {
+module.exports = function(wagner, passport) {
     var api = express.Router();
 
     api.use(bodyparser.json());
     
-    api.get('/login', wagner.invoke(function(User) {
-        return function(req, res){
-             res.send("{login}"); 
-        };
-    }));
+
+    var isAuthenticated = passport.authenticate('basic', { session : true });
+    var isAdmin = passport.authenticate('basic-admin',{session : true});
     
-    api.post('/register', wagner.invoke(function(User) {
+    console.log(isAuthenticated);
+    console.log(isAdmin);
+    
+    api.post('/register',isAuthenticated,wagner.invoke(function(User) {
         return function(req,res){
+            console.log(req.body.user);
+            req.body.user.pwd = bcrypt.hashSync(req.body.user.pwd, bcrypt.genSaltSync(8),null);
             User.create(req.body.user, function(error){
                 if(error){
                      return res.
@@ -28,10 +31,47 @@ module.exports = function(wagner) {
         };
     }));
     
-    api.put('/adminPwdChange', wagner.invoke(function(User) {
+    api.get('/login_success', function(req, res){
+        res.send(req.user);
+        // res.render('users', { user: req.user });
+    });
+    
+    api.get('/login_fail', function(req, res){
+        res.send("{login fail}");
+        // res.render('users', { user: req.user });
+    });
+    
+
+    // process the login form
+    
+    api.post('/login', function(req, res, next) {
+      passport.authenticate('local-login', function(err, user, info) {
+        if (err) { 
+            console.log("error:"+err);
+            return next(err); 
+            
+        }
+        // Redirect if it fails
+        console.log(user);
+        
+        if (!user) { 
+            console.log('fail');
+            return res.send("fail");
+        }
+        
+        req.logIn(user, function(err) {
+          if (err) { return next(err); }
+          // Redirect if it succeeds
+          console.log('ok');
+          return res.send({user:user});//redirect('/users/' + user.username);
+        });
+      })(req, res, next);
+    });
+    
+    api.put('/adminPwdChange',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
             
-            User.findOne({ cellphone : req.body.data.cellphone},
+        User.findOne({ cellphone : req.body.data.cellphone},
                 function(error, user){
                     if (error) {
                       return res.
@@ -61,7 +101,7 @@ module.exports = function(wagner) {
         };
     }));
     
-    api.put('/introMsgChange', wagner.invoke(function(User) {
+    api.put('/introMsgChange',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
             User.findOne({cellphone : req.body.data.cellphone},
                 function(error, user){
@@ -88,20 +128,46 @@ module.exports = function(wagner) {
         };
     }));
     
-    api.get('/user', wagner.invoke(function(User) {
+    api.get('/user', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res) {
-            User.find({}).exec(handleMany.bind(null,'users',res));
+            User.find({}).limit(5).exec(handleMany.bind(null,'users',res));
         };
     }));
     
-    api.get('/user/:id', wagner.invoke(function(User) {
+    api.get('/user/:cellphone', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res){
-            User.findOne({'_id': new ObjectId(req.params.id)},handleOne.bind(null,'user',res));
+            User.findOne({'cellphone': req.params.cellphone},handleOne.bind(null,'user',res));
         }; 
     }));
     
+    api.get('/user/next/:lastid',isAuthenticated,wagner.invoke(function(User) {
+        return function(req, res){
+            User.find({'_id': {$gt : req.params.lastid}}).limit(5).sort({'_id':1}).exec(handleMany.bind(null,'users',res));
+        }
+    }));
+    
+    api.get('/user/prev/:firstid',isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+            User.find({'_id': {$lt : req.params.firstid}}).limit(5).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));        }
+    }));
     return api;
 };
+
+// route middleware to make sure a user is logged in
+function isLoggedIn(req, res, next) {
+
+    console.log(req.user);
+    console.log("isAuthenticated : " + req.isAuthenticated());
+    
+    // if user is authenticated in the session, carry on 
+    if (req.isAuthenticated())
+        return next();
+    
+    
+    // if they aren't redirect them to the home page
+    res.redirect('/');
+}
+
 
 function handleOne(key, res, error, result) {
     if (error) {
