@@ -22,6 +22,7 @@ module.exports = function(wagner) {
     api.get('/surveyResult/:id', wagner.invoke(function(SurveyResult, User) {
         return function(req,res){
             User.findOne({'_id': new ObjectId(req.params.id)}, function(error, user){
+                    console.log(error);
                     var userid = user._id;
                     var paid = user.paid;
                     var usertype = user.usertype;
@@ -78,6 +79,8 @@ module.exports = function(wagner) {
                         photo = user.photo;
                         
                         SurveyTemplate.findOne({'type' : surveytype}, function(error, surveytemplate){
+                            console.log(error);
+                    
                             if (error) {
                               return res.
                                 status(status.INTERNAL_SERVER_ERROR).
@@ -112,6 +115,8 @@ module.exports = function(wagner) {
         return function(req,res){
             
             User.findOne({cellphone : req.params.id}, function(error, user){
+                console.log(error);
+                    
                 if(error){
                      return res.
                                 status(status.INTERNAL_SERVER_ERROR).

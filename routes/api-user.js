@@ -108,6 +108,8 @@ module.exports = function(wagner, passport) {
             
         User.findOne({ cellphone : req.body.user.cellphone},
                 function(error, user){
+                    console.log(error);
+                    
                     if (error) {
                       return res.
                         status(status.INTERNAL_SERVER_ERROR).
@@ -141,6 +143,7 @@ module.exports = function(wagner, passport) {
             console.log("edit:"+req.body.user.origin);
             User.findOne({cellphone : req.body.user.origin},
                 function(error, user){
+                    console.log(error);
                     
                     
                     if(error){
@@ -175,6 +178,8 @@ module.exports = function(wagner, passport) {
         return function(req,res){
             User.findOne({cellphone : req.body.data.cellphone},
                 function(error, user){
+                    console.log(error);
+                    
                     if(error){
                         return res.status(status.INTERNAL_SERVER_ERROR).
                         json({error : error.toString()});
