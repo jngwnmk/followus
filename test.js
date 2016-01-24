@@ -17,7 +17,7 @@ describe('API TEST', function() {
 
     // Bootstrap server
     models = require('./model/models')(wagner);
-    app.use(require('./routes/api-user.js')(wagner));
+    //app.use(require('./routes/api-user.js')(wagner));
     app.use(require('./routes/api-survey.js')(wagner));
 
 
@@ -27,6 +27,8 @@ describe('API TEST', function() {
     User = models.User;
     SurveyResult = models.SurveyResult;
     SurveyTemplate = models.SurveyTemplate;
+    
+    
   });
 
   after(function() {
@@ -36,7 +38,7 @@ describe('API TEST', function() {
 
   beforeEach(function(done) {
     // Make sure categories are empty before each test
-    User.remove({}, function(error) {
+    /*User.remove({}, function(error) {
       assert.ifError(error);
       
     });
@@ -53,20 +55,36 @@ describe('API TEST', function() {
     User.create(users, function(error) {
          assert.ifError(error);
          
+    });*/
+    
+    /*var surveytemplate = require('./json/surveytemplate.json');
+    
+    SurveyTemplate.create(surveytemplate, function(error) {
+         assert.ifError(error);
+         done();
+         
+    });*/
+    
+    SurveyTemplate.remove({}, function(error){
+      assert.ifError(error);
+      
     });
     
     var surveytemplate = require('./json/surveytemplate.json');
     
     SurveyTemplate.create(surveytemplate, function(error) {
          assert.ifError(error);
-         done();
-         
+        done();
+
     });
     
-    
+  });
+  
+  it('test',function(done){
+    done();
   });
 
-  it('[USER API] can load all user with paging', function(done){
+  /*it('[USER API] can load all user with paging', function(done){
     var url = URL_ROOT + '/user';
     // Make an HTTP request to followus-jngwnmk.c9users.io:process.env.PORT/user
     superagent.get(url, function(error, res) {
@@ -329,8 +347,7 @@ describe('API TEST', function() {
             });
             
     }); 
-    
-  });
+    */
   
   
 

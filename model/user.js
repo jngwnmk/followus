@@ -43,8 +43,7 @@ var userSchema = {
     },
 
     photo: {
-      type: String,
-      match: /^http:\/\//i
+      type: String
     },
 
     paid :{

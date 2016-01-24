@@ -1,32 +1,35 @@
 var mongoose = require('mongoose');
-var User = require('./user');
-var SurveyTemplate = require('./surveytemplate');
 
 var surveyResultSchema = {
 
+	//usercellphone :
+	//{
+	//	type : String,
+   // 	match : /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/
+	//},
 	user : mongoose.Schema.Types.ObjectId,
 	surveytype : {
 		type : String,
-		enum: ['NEW', 'EXPERT', 'MANAGER'],
-      	required  : true,
+		enum: ['NEW', 'EXPERT', 'MANAGER']
+      	
 	},
 	answers : 
 	[
 		{
 			no : {
-				type : Number,
+				type : String,
 				required : true,
 			},
 			desc : {
 				type :  String,
 				required : true
 			}
-			
 		}
 	],
 	date : {
 		type : Date,
-		required : true
+		required : true,
+		default : new Date()
 	} 
 	 
 };

@@ -20,13 +20,15 @@ module.exports = function(wagner, passport) {
         return function(req,res){
             console.log(req.body.user);
             req.body.user.pwd = bcrypt.hashSync(req.body.user.pwd, bcrypt.genSaltSync(8),null);
-            User.create(req.body.user, function(error){
+            User.create(req.body.user, function(error, user){
+                console.log(error);
+                console.log(user);
                 if(error){
                      return res.
                             status(status.INTERNAL_SERVER_ERROR).
                             json({ error: 'Duplicated Cellphone' }); 
                 } 
-                res.json({msg : 'OK'});    
+                res.json(user);    
             });
         };
     }));
@@ -68,10 +70,43 @@ module.exports = function(wagner, passport) {
       })(req, res, next);
     });
     
+    api.put('/changeUserPhoto/:id', isAuthenticated, wagner.invoke(function(User) {
+         return function(req,res){
+         console.log(req.params.id);
+        User.findOne({ _id : req.params.id},
+                function(error, user){
+                    console.log(error);
+                    console.log(user);
+                    if (error) {
+                      return res.
+                        status(status.INTERNAL_SERVER_ERROR).
+                        json({ error: error.toString() });
+                    }
+                    if (!user) {
+                      return res.
+                        status(status.NOT_FOUND).
+                        json({ error: 'Not found' });
+                    }
+                    
+                    user.photo = "https://s3-ap-northeast-1.amazonaws.com/followus-img-backup/"+req.params.id+".jpg";;
+                    user.save(function(err, doc){
+                        console.log(err);
+                        console.log(doc);
+                        if (err){
+                            return  res.status(status.INTERNAL_SERVER_ERROR).
+                                    json({ error: err }); 
+                        }
+                        res.json({msg: 'OK'});    
+                    });    
+                     
+            });
+        };
+    }));
+    
     api.put('/adminPwdChange',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
             
-        User.findOne({ cellphone : req.body.data.cellphone},
+        User.findOne({ cellphone : req.body.user.cellphone},
                 function(error, user){
                     if (error) {
                       return res.
@@ -85,7 +120,7 @@ module.exports = function(wagner, passport) {
                     }
                     
                     if(user.usertype=='ADMIN'){
-                        user.pwd = req.body.data.newpwd;
+                        user.pwd = req.body.user.newpwd;
                             user.save(function(err, doc){
                             if (err){
                                 return  res.status(status.INTERNAL_SERVER_ERROR).
@@ -98,6 +133,41 @@ module.exports = function(wagner, passport) {
                                     json({ error: 'NOT ADMIN' });
                     }
             });
+        };
+    }));
+    
+    api.put('/edit',isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+            console.log("edit:"+req.body.user.origin);
+            User.findOne({cellphone : req.body.user.origin},
+                function(error, user){
+                    
+                    
+                    if(error){
+                        return res.status(status.INTERNAL_SERVER_ERROR).
+                        json({error : error.toString()});
+                    }
+                    
+                    if(!user){
+                        return res.status(status.NOT_FOUND).
+                        json({error : 'Not fount'});
+                    }
+                    
+                    
+                    user.username = req.body.user.username;
+                    user.cellphone = req.body.user.cellphone;
+                    user.pwd = bcrypt.hashSync(req.body.user.pwd, bcrypt.genSaltSync(8),null);
+                    user.position = req.body.user.position;
+                    user.organization = req.body.user.organization;
+                    user.save(function(err, doc){
+                        if(err){
+                            return res.status(status.INTERNAL_SERVER_ERROR).
+                            json({error : err});
+                        }
+                        res.json({user : user});
+                    });
+                }    
+            );   
         };
     }));
     
@@ -130,7 +200,7 @@ module.exports = function(wagner, passport) {
     
     api.get('/user', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res) {
-            User.find({}).limit(5).exec(handleMany.bind(null,'users',res));
+            User.find({'usertype':'USER'}).limit(5).exec(handleMany.bind(null,'users',res));
         };
     }));
     
@@ -142,13 +212,13 @@ module.exports = function(wagner, passport) {
     
     api.get('/user/next/:lastid',isAuthenticated,wagner.invoke(function(User) {
         return function(req, res){
-            User.find({'_id': {$gt : req.params.lastid}}).limit(5).sort({'_id':1}).exec(handleMany.bind(null,'users',res));
+            User.find({'_id': {$gt : req.params.lastid}, 'usertype':'USER'}).limit(5).sort({'_id':1}).exec(handleMany.bind(null,'users',res));
         }
     }));
     
     api.get('/user/prev/:firstid',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
-            User.find({'_id': {$lt : req.params.firstid}}).limit(5).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));        }
+            User.find({'_id': {$lt : req.params.firstid}, 'usertype':'USER'}).limit(5).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));        }
     }));
     return api;
 };

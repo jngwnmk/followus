@@ -16,7 +16,7 @@ var app = express();
 var allowCrossDomain = function(req, res, next) {
     
     res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.header('Access-Control-Allow-Credentials',true);
 
@@ -43,6 +43,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use('/api/v1', require('./routes/api-user.js')(wagner, passport));
 app.use('/api/v1', require('./routes/api-survey.js')(wagner));
+
 
 app.listen(process.env.PORT);
 console.log('Listening on port '+process.env.PORT);
