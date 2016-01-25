@@ -203,10 +203,59 @@ module.exports = function(wagner, passport) {
         };
     }));
     
+    api.put('/changePaidStatus', isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+             User.findOne({ cellphone : req.body.user.cellphone},
+                function(error, user){
+                    console.log(error);
+                    console.log("origin : " + user);
+                    
+                    
+                    if (error) {
+                      return res.
+                        status(status.INTERNAL_SERVER_ERROR).
+                        json({ error: error.toString() });
+                    }
+                    if (!user) {
+                      return res.
+                        status(status.NOT_FOUND).
+                        json({ error: 'Not found' });
+                    }
+                    
+                        if(user.paid){
+                            user.paid = false;
+                        } else {
+                            user.paid = true;
+                        }
+                        user.save(function(err, doc){
+                            if (err){
+                                return  res.status(status.INTERNAL_SERVER_ERROR).
+                                        json({ error: err }); 
+                            }
+                            console.log("modified:"+doc);
+                        
+                            res.json({paid: doc.paid});    
+                        });    
+                    
+            });
+        };
+    }));
+    api.get('/userlist', isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+            User.find({}).exec(handleMany.bind(null,'users',res));
+        }
+    }));
+    
     api.get('/user', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res) {
             User.find({'usertype':'USER'}).limit(5).exec(handleMany.bind(null,'users',res));
         };
+    }));
+    
+    api.get('/user/search/:keyword', isAuthenticated, wagner.invoke(function(User) {
+        return function(req, res){
+            User.find({'username' : new RegExp(req.params.keyword, 'i')}).exec(handleMany.bind(null,'users',res));
+        }
     }));
     
     api.get('/user/:cellphone', isAuthenticated,wagner.invoke(function(User) {
@@ -224,6 +273,27 @@ module.exports = function(wagner, passport) {
     api.get('/user/prev/:firstid',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
             User.find({'_id': {$lt : req.params.firstid}, 'usertype':'USER'}).limit(5).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));        }
+    }));
+    
+    api.get('/info',isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+            var total = 0;
+            var paid = 0;
+            User.count({}, function(err,totalCnt){
+                total = totalCnt;
+                
+                User.count({'paid':true}, function(err, paidCnt) {
+                    paid = paidCnt;
+                    var info = {};
+                    info['total'] = total;
+                    info['paid'] =paid;
+                    console.log(info);
+                    res.json(info);
+                })
+            });
+            
+            
+        } 
     }));
     return api;
 };

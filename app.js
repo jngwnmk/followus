@@ -43,6 +43,7 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 app.use('/api/v1', require('./routes/api-user.js')(wagner, passport));
 app.use('/api/v1', require('./routes/api-survey.js')(wagner));
+app.use('/api/v1', require('./routes/api-excel.js')(wagner));
 
 
 app.listen(process.env.PORT);
