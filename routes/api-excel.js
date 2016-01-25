@@ -1,11 +1,6 @@
 var bodyparser = require('body-parser');
 var express = require('express');
-var status = require('http-status');
 var ObjectId = require('mongoose').Types.ObjectId;
-var bcrypt = require('bcrypt-nodejs');
-var csv = require('express-csv')
-var http = require('http');
-
 
 module.exports = function(wagner) {
     var api = express.Router();
