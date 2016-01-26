@@ -1,6 +1,7 @@
 var bodyparser = require('body-parser');
 var express = require('express');
 var ObjectId = require('mongoose').Types.ObjectId;
+var csv = require('express-csv');
 
 module.exports = function(wagner) {
     var api = express.Router();
@@ -41,11 +42,12 @@ module.exports = function(wagner) {
          
      }));
      
-     api.get('/exportByType/:type', wagner.invoke(function(User, SurveyTemplate, SurveyResult) {
+     /*api.get('/exportByType/:type', wagner.invoke(function(User, SurveyTemplate, SurveyResult) {
          return function(req,res){
-             
+                
          };
      }));
+     */
  
      api.get('/exportByUser/:id',wagner.invoke(function(User,SurveyTemplate, SurveyResult) {
             return function(req, res){
@@ -78,7 +80,7 @@ module.exports = function(wagner) {
                             console.log(csv);
                             var newFileName = encodeURIComponent(filename+'.csv');
                             res.setHeader('Content-Disposition', 'attachment;filename*=UTF-8\'\''+newFileName);
-                            //res.header('content-disposition', 'attachment; filename='+filename+'.csv');
+                            //res.header('content-disposition', 'attachment;filename*=UTF-8\'\''+newFileName);
                             //res.set('Content-Type', 'application/octet-stream');
                             res.set('Content-Type', 'text/csv');
                             res.csv(csv);
@@ -93,21 +95,3 @@ module.exports = function(wagner) {
     
     return api;
 };
-
-function download(url, cb) {
-  var data = "";
-  var request = require("https").get(url, function(res) {
-
-    res.on('data', function(chunk) {
-      data += chunk;
-    });
-
-    res.on('end', function() {
-      cb(data);
-    })
-  });
-
-  request.on('error', function(e) {
-    console.log("Got error: " + e.message);
-  });
-}

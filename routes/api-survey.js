@@ -19,9 +19,11 @@ module.exports = function(wagner) {
         };
     }));
     
-    api.get('/surveyResult/:id', wagner.invoke(function(SurveyResult, User) {
+    api.get('/surveyResult/:requestUser/:surveyUserId', wagner.invoke(function(SurveyResult, User) {
         return function(req,res){
-            User.findOne({'_id': new ObjectId(req.params.id)}, function(error, user){
+            
+            
+            User.findOne({'_id': new ObjectId(req.params.requestUser)}, function(error, user){
                     console.log(error);
                     var userid = user._id;
                     var paid = user.paid;
@@ -29,7 +31,7 @@ module.exports = function(wagner) {
                     console.log(user);
                     if(usertype=='ADMIN' || (usertype == 'USER' && paid)){
                         
-                        SurveyResult.find({'user' : userid}, handleMany.bind(null, 'surveyresult', res));
+                        SurveyResult.find({'user' : new ObjectId(req.params.surveyUserId)}, handleMany.bind(null, 'surveyresult', res));
                         
                         
                     } else {

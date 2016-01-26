@@ -248,14 +248,14 @@ module.exports = function(wagner, passport) {
     
     api.get('/user', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res) {
-            User.find({'usertype':'USER'}).limit(5).exec(handleMany.bind(null,'users',res));
+            User.find({'usertype':'USER'}).limit(20).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));
         };
     }));
     
     api.get('/user/search/:keyword', isAuthenticated, wagner.invoke(function(User) {
         return function(req, res){
-            User.find({'username' : new RegExp(req.params.keyword, 'i')}).exec(handleMany.bind(null,'users',res));
-        }
+            User.find({'username' : req.params.keyword}).exec(handleMany.bind(null,'users',res));
+        };
     }));
     
     api.get('/user/:cellphone', isAuthenticated,wagner.invoke(function(User) {
@@ -266,13 +266,13 @@ module.exports = function(wagner, passport) {
     
     api.get('/user/next/:lastid',isAuthenticated,wagner.invoke(function(User) {
         return function(req, res){
-            User.find({'_id': {$gt : req.params.lastid}, 'usertype':'USER'}).limit(5).sort({'_id':1}).exec(handleMany.bind(null,'users',res));
-        }
+            User.find({'_id': {$lt : req.params.lastid}, 'usertype':'USER'}).limit(20).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));
+        };
     }));
     
     api.get('/user/prev/:firstid',isAuthenticated, wagner.invoke(function(User) {
         return function(req,res){
-            User.find({'_id': {$lt : req.params.firstid}, 'usertype':'USER'}).limit(5).sort({'_id':-1}).exec(handleMany.bind(null,'users',res));        }
+            User.find({'_id': {$gt : req.params.firstid}, 'usertype':'USER'}).limit(20).sort({'_id':1}).exec(handleMany.bind(null,'users',res));        }
     }));
     
     api.get('/info',isAuthenticated, wagner.invoke(function(User) {
