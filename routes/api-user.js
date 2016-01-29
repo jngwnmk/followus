@@ -16,20 +16,28 @@ module.exports = function(wagner, passport) {
     console.log(isAuthenticated);
     console.log(isAdmin);
     
-    api.post('/register',isAuthenticated,wagner.invoke(function(User) {
+    api.post('/register',isAuthenticated,wagner.invoke(function(User, SurveyTemplate) {
         return function(req,res){
             console.log(req.body.user);
             req.body.user.pwd = bcrypt.hashSync(req.body.user.pwd, bcrypt.genSaltSync(8),null);
-            User.create(req.body.user, function(error, user){
-                console.log(error);
-                console.log(user);
-                if(error){
-                     return res.
-                            status(status.INTERNAL_SERVER_ERROR).
-                            json({ error: 'Duplicated Cellphone' }); 
-                } 
-                res.json(user);    
+            SurveyTemplate.findOne({type : req.body.user.surveytype}, function(error, surveytype){
+                    
+                    req.body.user.introduction  = replaceIntro(surveytype.defaultIntro,req.body.user.username,
+                                                                req.body.user.position, req.body.user.organization, 
+                                                                surveytype.questions.length);
+                    User.create(req.body.user, function(error, user){
+                    console.log(error);
+                    console.log(user);
+                    if(error){
+                         return res.
+                                status(status.INTERNAL_SERVER_ERROR).
+                                json({ error: 'Duplicated Cellphone' }); 
+                    } 
+                    res.json(user);    
+                });
+                    
             });
+            
         };
     }));
     
@@ -258,6 +266,12 @@ module.exports = function(wagner, passport) {
         };
     }));
     
+    api.get('/user/searchbyid/:id', isAuthenticated, wagner.invoke(function(User) {
+        return function(req,res){
+            User.findOne({'_id':new ObjectId(req.params.id)}, handleOne.bind(null,'user',res));  
+        };
+    }));
+    
     api.get('/user/:cellphone', isAuthenticated,wagner.invoke(function(User) {
         return function(req, res){
             User.findOne({'cellphone': req.params.cellphone},handleOne.bind(null,'user',res));
@@ -313,6 +327,11 @@ function isLoggedIn(req, res, next) {
     res.redirect('/');
 }
 
+function replaceIntro(intro, username, position, organization, question_num) {
+    return intro.replace(/{{organization}}/gi, organization).replace(/{{username}}/gi, username)
+                .replace(/{{position}}/gi, position).replace(/{{question_num}}/gi, question_num);
+    
+}
 
 function handleOne(key, res, error, result) {
     if (error) {

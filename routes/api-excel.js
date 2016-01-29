@@ -1,6 +1,7 @@
 var bodyparser = require('body-parser');
 var express = require('express');
 var ObjectId = require('mongoose').Types.ObjectId;
+var csv = require('express-csv');
 
 module.exports = function(wagner) {
     var api = express.Router();
@@ -59,7 +60,10 @@ module.exports = function(wagner) {
                     SurveyTemplate.findOne({'type' : type}, function(error, template){
                         var fields = [];
                         for(var i = 0 ; i < template.questions.length ; ++i){
-                            var field = template.questions[i].no +'.'+ template.questions[i].desc.replace(/{USER}/gi, user.username);;
+                            var field = template.questions[i].no +'.'+ 
+                                        template.questions[i].desc.replace(/{USER}/gi, user.username).
+                                        replace(/{POSITION}/gi, user.position)
+                                        .replace(/{SUFFIX1}/gi,user.suffix_1).replace(/{SUFFIX2}/gi,user.suffix_2);
                             fields.push(field);
                         }
                         fields.push('답변일시');

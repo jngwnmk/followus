@@ -21,8 +21,7 @@ var surveyResultSchema = {
 				required : true,
 			},
 			desc : {
-				type :  String,
-				required : true
+				type :  String
 			}
 		}
 	],

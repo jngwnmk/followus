@@ -12,6 +12,11 @@ var surveyTemplateSchema = {
       required : true
     },
     
+    defaultIntro : {
+      type : String,
+      required : true
+    },
+    
     questions : [{
   		no : {
   			type : Number,
@@ -26,8 +31,11 @@ var surveyTemplateSchema = {
   			enum : ["SELECT","DESCRIPT","SCORE"],
   			required : true
   		},
-
-  		answer : {
+  		required : {
+    				  type : Boolean,
+    				  default : false
+    	},
+    	answer : {
     		options: [
     			{
     				no : {
@@ -37,6 +45,10 @@ var surveyTemplateSchema = {
     				desc : {
     					type : String,
     					required : true
+    				},
+    				isEtc : {
+    				  type : Boolean,
+    				  default : false
     				}
     			}
     		],
