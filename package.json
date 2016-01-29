@@ -3,28 +3,26 @@
   "description": "Hello Elastic Beanstalk",
   "version": "0.0.6",
   "dependencies": {
-    "express": "4.12.3",
-    "body-parser" : "1.12.4",
-    "http-status" : "0.1.8",
-    "mongoose" : "4.0.3",
-    "underscore" : "1.5.2",
-    "wagner-core" : "0.1.0",
-    "passport" : "~0.1.17",         
-    "passport-local" : "~0.1.6",   
-    "passport-http" : "latest",
-    "connect-flash" : "~0.1.1",     
-    "bcrypt-nodejs" : "latest",
-
-    "morgan": "~1.0.0",
+    "bcrypt-nodejs": "latest",
+    "body-parser": "1.12.4",
+    "connect-flash": "~0.1.1",
     "cookie-parser": "~1.0.0",
+    "express": "4.12.3",
+    "express-csv": "^0.6.0",
+    "express-session": "~1.0.0",
+    "http-status": "0.1.8",
     "method-override": "~1.0.0",
-    "express-session": "~1.0.0"
-    
-  }, 
-  
-  "devDependencies" : {
-      "mocha" : "2.2.4",
-      "superagent" : "1.2.0"
+    "mongoose": "4.0.3",
+    "morgan": "~1.0.0",
+    "passport": "~0.1.17",
+    "passport-http": "latest",
+    "passport-local": "~0.1.6",
+    "underscore": "1.5.2",
+    "wagner-core": "0.1.0"
+  },
+  "devDependencies": {
+    "mocha": "2.2.4",
+    "superagent": "1.2.0"
   },
   "scripts": {
     "test": "mocha test.js"
