@@ -42,12 +42,52 @@ module.exports = function(wagner) {
          
      }));
      
-     /*api.get('/exportByType/:type', wagner.invoke(function(User, SurveyTemplate, SurveyResult) {
+     api.get('/exportByType/:type', wagner.invoke(function(User, SurveyTemplate, SurveyResult) {
          return function(req,res){
+            var csv = [];
                 
+            SurveyTemplate.findOne({'type':req.params.type}, function(error, template){
+                
+                var fields = [];
+                fields.push('회원이름');
+                for(var i = 0 ; i < template.questions.length ; ++i){
+                            var no = template.questions[i].no;
+                            var desc = template.questions[i].desc.replace(/{USER}/gi, "").replace(/{POSITION}/gi, "")
+                                        .replace(/{SUFFIX1}/gi,"").replace(/{SUFFIX2}/gi,"");;
+                            var field = no +'.'+ desc;
+                            fields.push(field);
+                }   
+                fields.push('답변일시');
+                csv.push(fields);
+                
+                SurveyResult.find({'surveytype': req.params.type}).populate('user').sort({'user':1}).exec(function(error, surveyresults){
+                    //console.log(surveyresults);
+                    var filename = '설문결과('+req.params.type+')';
+                    for(var surveyresult_idx in surveyresults){
+                       // console.log(surveyresult_idx);
+                        var results = [];
+                        if(surveyresults[surveyresult_idx].answers!=undefined){
+                            for(var ans_idx = 0 ; ans_idx < surveyresults[surveyresult_idx].answers.length ; ++ans_idx){
+                                var answer = surveyresults[surveyresult_idx].answers[ans_idx].desc;
+                                results.push(answer);
+                            }
+                            results.push(surveyresults[surveyresult_idx].date);
+                            csv.push(results);
+                        }
+                        
+                    }
+                    //console.log(csv);  
+                    var newFileName = encodeURIComponent(filename+'.csv');
+                    res.setHeader('Content-Disposition', 'attachment;filename*=UTF-8\'\''+newFileName);
+                    res.set('Content-Type', 'text/csv');
+                    res.csv(csv);
+                });
+                        
+            });
+            
          };
      }));
-     */
+     
  
      api.get('/exportByUser/:id',wagner.invoke(function(User,SurveyTemplate, SurveyResult) {
             return function(req, res){

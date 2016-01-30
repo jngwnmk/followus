@@ -397,29 +397,29 @@
           {
               "no" : 14,
               "desc" : "{USER} {POSITION}{SUFFIX1} 금융컨설턴트로 볼 때 5점 만점에 몇점을 주실 수 있을까요?",
-              "type" : "SCORE",
+              "type" : "SELECT",
               "required" : true,
               "answer" : {
                   "options": [
                     {
                         "no" : 1,
-                        "desc" : "1"
+                        "desc" : "1점"
                     },
                     {
                         "no" : 2,
-                        "desc" : "2"
+                        "desc" : "2점"
                     },
                     {
                         "no" : 3,
-                        "desc" : "3"
+                        "desc" : "3점"
                     },
                     {
                         "no" : 4,
-                        "desc" : "4"
+                        "desc" : "4점"
                     },
                     {
                         "no" : 5,
-                        "desc" : "5"
+                        "desc" : "5점"
                     }
                   ],
                   "mindesc" : "자질부족",

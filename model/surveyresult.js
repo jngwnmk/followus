@@ -7,7 +7,11 @@ var surveyResultSchema = {
 	//	type : String,
    // 	match : /^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}$/
 	//},
-	user : mongoose.Schema.Types.ObjectId,
+	user : 
+	{
+		type : mongoose.Schema.Types.ObjectId,
+		ref : 'User'
+	},
 	surveytype : {
 		type : String,
 		enum: ['NEW', 'EXPERT', 'MANAGER']
