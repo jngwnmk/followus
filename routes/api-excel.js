@@ -10,16 +10,17 @@ module.exports = function(wagner) {
      
      api.get('/exportUser',wagner.invoke(function(User) {
          return function(req, res){
-            var csv = [];
+            var data = [];
             var fields = [];
-            fields.push('이름');
+            var dataBuffer = Buffer.concat([new Buffer('\xEF\xBB\xBF', 'binary'), new Buffer('이름')]);
+            fields.push(dataBuffer);
             fields.push('전화번호');
             fields.push('직책');
             fields.push('설문종류');
             fields.push('조직');
             fields.push('결제여부');
             fields.push('가입일자');
-            csv.push(fields);
+            data.push(fields);
             User.find({}).exec(function(err, users){
                 
                 for(var i = 0 ; i < users.length; ++i){
@@ -31,11 +32,13 @@ module.exports = function(wagner) {
                     values.push(users[i].organization);
                     values.push(users[i].paid);
                     values.push(users[i].date);
-                    csv.push(values);
+                    data.push(values);
                 }
                 res.setHeader('Content-Disposition', 'attachment;filename*=UTF-8\'\''+'userlist.csv');
-                res.set('Content-Type', 'text/csv');
-                res.csv(csv);
+                res.set('Content-Type', ' text/csv');
+                //var dataBuffer = Buffer.concat([new Buffer('\xEF\xBB\xBF', 'binary'), new Buffer(data)]);
+                res.csv(data);
+                
                 
             });
          };
@@ -49,7 +52,8 @@ module.exports = function(wagner) {
             SurveyTemplate.findOne({'type':req.params.type}, function(error, template){
                 
                 var fields = [];
-                fields.push('회원이름');
+                var dataBuffer = Buffer.concat([new Buffer('\xEF\xBB\xBF', 'binary'), new Buffer('회원이름')]);
+                fields.push(dataBuffer);
                 for(var i = 0 ; i < template.questions.length ; ++i){
                             var no = template.questions[i].no;
                             var desc = template.questions[i].desc.replace(/{USER}/gi, "").replace(/{POSITION}/gi, "")
@@ -105,7 +109,13 @@ module.exports = function(wagner) {
                                         template.questions[i].desc.replace(/{USER}/gi, user.username).
                                         replace(/{POSITION}/gi, user.position)
                                         .replace(/{SUFFIX1}/gi,user.suffix_1).replace(/{SUFFIX2}/gi,user.suffix_2);
-                            fields.push(field);
+                            if(i==0){
+                                var dataBuffer = Buffer.concat([new Buffer('\xEF\xBB\xBF', 'binary'), new Buffer(field)]);
+                                fields.push(dataBuffer);
+                            } else {
+                                fields.push(field);
+                            }
+                            
                         }
                         fields.push('답변일시');
                         csv.push(fields);
