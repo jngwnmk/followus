@@ -67,6 +67,7 @@ module.exports = function(wagner) {
                        // console.log(surveyresult_idx);
                         var results = [];
                         if(surveyresults[surveyresult_idx].answers!=undefined){
+                            results.push(surveyresults[surveyresult_idx].user.username+"("+surveyresults[surveyresult_idx].user.cellphone+")");
                             for(var ans_idx = 0 ; ans_idx < surveyresults[surveyresult_idx].answers.length ; ++ans_idx){
                                 var answer = surveyresults[surveyresult_idx].answers[ans_idx].desc;
                                 results.push(answer);
