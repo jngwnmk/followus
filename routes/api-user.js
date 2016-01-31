@@ -175,7 +175,7 @@ module.exports = function(wagner, passport) {
                             return res.status(status.INTERNAL_SERVER_ERROR).
                             json({error : err});
                         }
-                        res.json({user : user});
+                        res.json(user);
                     });
                 }    
             );   
