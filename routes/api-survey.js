@@ -62,7 +62,22 @@ module.exports = function(wagner) {
         return function(req,res){
           SurveyTemplate.findOne({'type' : req.params.type},handleOne.bind(null,'surveytemplate',res))  
         }; 
-    }))
+    }));
+    
+    api.put('/surveyTemplate/:type',wagner.invoke(function(SurveyTemplate) {
+        return function(req,res){
+          SurveyTemplate.findOne({'type': req.params.type}, function(error, surveytemplate){
+                surveytemplate.defaultIntro = req.body.introduction;
+                surveytemplate.save(function(err, doc){
+                      if (err){
+                                return  res.status(status.INTERNAL_SERVER_ERROR).
+                                        json({ error: err }); 
+                      }
+                      res.json({introduction: doc.defaultIntro});        
+                });
+          });
+        };
+    }));
 
     api.get('/survey/:id',wagner.invoke(function(User,SurveyTemplate) {
             return function(req, res){
