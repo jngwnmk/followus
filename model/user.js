@@ -46,6 +46,14 @@ var userSchema = {
       type : String
     },
     
+    suffix_3 : {
+      type : String
+    },
+    
+    suffix_4 : {
+      type : String
+    },
+    
     introduction : { 
     	type : String
     },
