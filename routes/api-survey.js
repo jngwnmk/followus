@@ -21,6 +21,17 @@ module.exports = function(wagner) {
         };
     }));
     
+    api.get('/surveryResultInfo/:surveyUserId', wagner.invoke(function(SurveyResult, User) {
+        return function(req,res){
+            
+            SurveyResult.count({'user' : new ObjectId(req.params.surveyUserId)}, function(err,totalCnt){
+                var info = {};
+                 info['answer_num'] =totalCnt;
+                 res.json(info);
+            });
+            
+        };
+    }));
     
     //show all result for admin
     api.get('/surveyResult', wagner.invoke(function(SurveyResult) {
@@ -51,6 +62,8 @@ module.exports = function(wagner) {
             });  
         };
     }));
+    
+    
 
     api.get('/surveyTemplate',wagner.invoke(function(SurveyTemplate) {
         return function(req,res){
