@@ -30,7 +30,7 @@ var userSchema = {
     
     surveytype : {
       type: String,
-      enum: ['NEW', 'EXPERT', 'MANAGER'],
+      enum: ['NEW', 'EXPERT', 'MANAGER','TRANSFER'],
       required: true
     },
 

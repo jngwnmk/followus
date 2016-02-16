@@ -4,7 +4,7 @@ var surveyTemplateSchema = {
 
 	 type : {
       type: String,
-      enum: ['NEW', 'EXPERT', 'MANAGER'],
+      enum: ['NEW', 'EXPERT', 'MANAGER','TRANSFER'],
       required: true
     },
     desc  : {

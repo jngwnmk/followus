@@ -14,7 +14,7 @@ var surveyResultSchema = {
 	},
 	surveytype : {
 		type : String,
-		enum: ['NEW', 'EXPERT', 'MANAGER']
+		enum: ['NEW', 'EXPERT', 'MANAGER','TRANSFER']
       	
 	},
 	answers : 

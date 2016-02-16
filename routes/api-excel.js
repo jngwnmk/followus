@@ -56,8 +56,13 @@ module.exports = function(wagner) {
                 fields.push(dataBuffer);
                 for(var i = 0 ; i < template.questions.length ; ++i){
                             var no = template.questions[i].no;
-                            var desc = template.questions[i].desc.replace(/{USER}/gi, "").replace(/{POSITION}/gi, "")
-                                        .replace(/{SUFFIX1}/gi,"").replace(/{SUFFIX2}/gi,"");;
+                            var desc = template.questions[i].desc
+                                        .replace(/{USER}/gi, "")
+                                        .replace(/{POSITION}/gi, "")
+                                        .replace(/{SUFFIX1}/gi,"")
+                                        .replace(/{SUFFIX2}/gi,"")
+                                        .replace(/{SUFFIX3}/gi,"")
+                                        .replace(/{SUFFIX4}/gi,"");
                             var field = no +'.'+ desc;
                             fields.push(field);
                 }   
@@ -106,9 +111,13 @@ module.exports = function(wagner) {
                         var fields = [];
                         for(var i = 0 ; i < template.questions.length ; ++i){
                             var field = template.questions[i].no +'.'+ 
-                                        template.questions[i].desc.replace(/{USER}/gi, user.username).
-                                        replace(/{POSITION}/gi, user.position)
-                                        .replace(/{SUFFIX1}/gi,user.suffix_1).replace(/{SUFFIX2}/gi,user.suffix_2);
+                                        template.questions[i].desc
+                                        .replace(/{USER}/gi, user.username)
+                                        .replace(/{POSITION}/gi, user.position)
+                                        .replace(/{SUFFIX1}/gi,user.suffix_1)
+                                        .replace(/{SUFFIX2}/gi,user.suffix_2)
+                                        .replace(/{SUFFIX3}/gi,user.suffix_3)
+                                        .replace(/{SUFFIX4}/gi,user.suffix_4);
                             if(i==0){
                                 var dataBuffer = Buffer.concat([new Buffer('\xEF\xBB\xBF', 'binary'), new Buffer(field)]);
                                 fields.push(dataBuffer);
