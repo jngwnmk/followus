@@ -1029,7 +1029,7 @@
           },
           {
               "no" : 2,
-              "desc" : "{{ORGANIZATION}}의 보험상품을 가입하신 것은 언제이십니까?",
+              "desc" : "{ORGANIZATION}의 보험상품을 가입하신 것은 언제이십니까?",
               "type" : "SELECT",
               "required" : true,
               "answer" : {
@@ -1061,7 +1061,7 @@
           },
           {
             "no" : 3,
-            "desc" : "이전의 {{ORGANIZATION}} 금융컨설턴트와의 관계중에 가장 불편하셨던 부분은 무엇입니까?(가장 큰 단점 한가지)",
+            "desc" : "이전의 {ORGANIZATION} 금융컨설턴트와의 관계중에 가장 불편하셨던 부분은 무엇입니까?(가장 큰 단점 한가지)",
             "type" : "SELECT",
             "required" : true,
             "answer" : {
@@ -1100,7 +1100,7 @@
           },
           {
             "no" : 4,
-            "desc" : "새롭게 바뀐 담당자인 {{USER}} {{POSITION}}에게 바라는 부분은 무엇입니까? (가장 바라는 점 한가지)",
+            "desc" : "새롭게 바뀐 담당자인 {USER} {POSITION}에게 바라는 부분은 무엇입니까? (가장 바라는 점 한가지)",
             "type" : "SELECT",
             "required" : true,
             "answer" : {
